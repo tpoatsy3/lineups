@@ -1,0 +1,4 @@
+*.pyc
+lineups.csv
+.DS_Store
+venv
