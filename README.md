@@ -1,6 +1,26 @@
 # DraftKings Line Up Generator
 
 ## Installation
+1. **Locate the "Code" Button:**
+   On the main repository page, there's a green button labeled "Code". Click on it. This will open a small menu.
+
+7. **Copy the Repository URL:**
+   In the menu, you'll see a URL that ends with `.git`. Click the "Copy" button next to it.
+
+8. **Open Finder**
+9. **Create a New Folder (Optional):**
+If you wish to keep your downloaded repositories organized, create a new folder.
+10. **Open Terminal:**
+Now, let's open the "Terminal" application. You can find it by using Spotlight search. Click the magnifying glass in the top-right corner of your screen, type "Terminal", and press Return when it appears.
+
+11. **Navigate to Your Folder:**
+In the Terminal window, type cd (with a space at the end), then drag and drop the folder you created (e.g., "GitHub Projects") into the Terminal window. Press Return.
+
+12. **Download the Repository:**
+In the Terminal, type in `git clone` and paste the repository URL you copied earlier and press Return. You'll see some messages as the repository is downloaded.
+
+13. **Open the Repository:**
+Go back to Finder and navigate to the folder where you downloaded the repository. Double-click the repository folder to open it.
 
 
 ## Usage
