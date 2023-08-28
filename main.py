@@ -14,21 +14,43 @@ def read_settings_document():
     with open("./Input.xlsx", "rb") as fd:
         df = pd.read_excel(fd, sheet_name="settings")
     return _create_map_from_columns(df, "Setting", "Value")
+
 def permute_player_slots(df, salary_df, max_salary):
     column_names = list(df.columns.values)
     transposed_df = df.values.transpose()
     player_list_by_cols = transposed_df.tolist()
     df = pd.DataFrame(list(itertools.product(*player_list_by_cols)), columns=column_names)
-    df = df.dropna(axis='index', how='any')
-    df["sorted"] = df.apply(lambda row: ",".join(sorted(row)), axis=1, result_type='reduce')
-    df = df.drop_duplicates(subset=["sorted"])
-    df = df.drop(columns=["sorted"])
-    non_unique_mask = df.nunique(axis=1) >= len(df.columns)
-    df = df.loc[non_unique_mask, :]
+
+    df = remove_rows_with_blanks(df)
+
+    df = remove_duplicate_combinations(df)
+
+    df = remove_duplicate_players(df, column_names)
 
     df = remove_expensive_lineups(df, salary_df, max_salary)
 
     return df
+
+def remove_duplicate_players(df, original_cols):
+    player_name_cols = []
+    for column in original_cols:
+        if "Slot" in column:
+            new_col_name = column.replace("Slot", "Name")
+            player_name_cols.append(new_col_name)
+            split_df = df[column].str.rsplit(" (", expand=True)
+            df[new_col_name] = split_df.iloc[:, 0]
+
+    non_unique_mask = df[player_name_cols].nunique(axis=1) >= len(player_name_cols)
+    df = df.loc[non_unique_mask, :]
+    return df.drop(columns=player_name_cols)
+
+def remove_duplicate_combinations(df):
+    df["sorted"] = df.apply(lambda row: ",".join(sorted(row)), axis=1, result_type='reduce')
+    df = df.drop_duplicates(subset=["sorted"])
+    return df.drop(columns=["sorted"])
+
+def remove_rows_with_blanks(df):
+    return df.dropna(axis='index', how='any')
 
 def remove_expensive_lineups(df, salary_map, max_salary):
     original_cols = df.columns
